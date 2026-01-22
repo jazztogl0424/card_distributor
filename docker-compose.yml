@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  backend:
+    image: php:8.2-apache
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - "8000:80"
+    networks:
+      - card-net
+
+  frontend:
+    image: node:20
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    # Re-install dependencies inside the container to ensure correct platform binaries
+    command: sh -c "rm -rf node_modules package-lock.json && npm install && npm run dev -- --host"
+    ports:
+      - "5173:5173"
+    networks:
+      - card-net
+
+networks:
+  card-net:
